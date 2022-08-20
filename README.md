@@ -24,7 +24,7 @@ mv tiktok /usr/local/bin/tiktok
 Usage: tiktok [-v voice] [-o file] text
 Options:
   -v voice  Voice to use (default: en_us_001)
-            see https://github.com/oscie57/tiktok-voice/blob/main/main.py for available voices
+            see https://github.com/oscie57/tiktok-voice/blob/main/codes.md for available voices
   -o file   Output file, default is to play audio to the speakers
 ```
 

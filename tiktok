@@ -6,7 +6,7 @@ usage() {
     echo "Usage: $0 [-v voice] [-o file] text"
     echo "Options:"
     echo "  -v voice  Voice to use (default: en_us_001)"
-    echo "            see https://github.com/oscie57/tiktok-voice/blob/main/main.py for available voices"
+    echo "            see https://github.com/oscie57/tiktok-voice/blob/main/codes.md for available voices"
     echo "  -o file   Output file, default is to play audio to the speakers"
 }
 
