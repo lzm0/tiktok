@@ -40,6 +40,12 @@ tiktok -v en_us_c3po 'Hello, world!'
 tiktok -v en_us_c3po -o hello_world.mp3 'Hello, world!'
 ```
 
+### Make a fortune quietly
+
+```bash
+fortune | tiktok
+```
+
 ## Credits
 
 - [tiktok-voice](https://github.com/oscie57/tiktok-voice) Simple Python script to interact with the TikTok TTS API
