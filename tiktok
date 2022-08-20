@@ -32,14 +32,18 @@ if [ -z "$text" ]; then
     exit 1
 fi
 temp=$(mktemp)
-curl -X POST -G -s 'https://api16-normal-useast5.us.tiktokv.com/media/api/text/speech/invoke/' \
+response=$(curl -X POST -G -s 'https://api16-normal-useast5.us.tiktokv.com/media/api/text/speech/invoke/' \
     --data-urlencode "text_speaker=$voice" \
     --data-urlencode "req_text=$text" \
     --data-urlencode 'speaker_map_type=0' \
     -H 'Connection: keep-alive' \
-    -H 'Content-Length: 0' |
-    jq -r '.data.v_str' |
-    base64 -d > $temp
+    -H 'Content-Length: 0')
+message=$(echo $response | jq -r '.message')
+if [ "$message" != 'success' ]; then
+    echo "Error: $message"
+    exit 1
+fi
+echo $response | jq -r '.data.v_str' | base64 -d > $temp
 if [ -n "$output" ]; then
     mv $temp $output
 else
