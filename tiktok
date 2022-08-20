@@ -1,0 +1,47 @@
+#!/bin/sh
+# tiktok - a simple CLI tool to interact with the TikTok text-to-speech API
+# currently only supports macOS
+
+usage() {
+    echo "Usage: $0 [-v voice] [-o file] text"
+    echo "Options:"
+    echo "  -v voice  Voice to use (default: en_us_001)"
+    echo "            see https://github.com/oscie57/tiktok-voice/blob/main/main.py for available voices"
+    echo "  -o file   Output file, default is to play audio to the speakers"
+}
+
+voice='en_us_001'
+while getopts "v:o:" opt; do
+    case $opt in
+    v)
+        voice=$OPTARG
+        ;;
+    o)
+        output=$OPTARG
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+    esac
+done
+shift $((OPTIND - 1))
+text=$@
+if [ -z "$text" ]; then
+    usage
+    exit 1
+fi
+temp=$(mktemp)
+curl -X POST -G -s 'https://api16-normal-useast5.us.tiktokv.com/media/api/text/speech/invoke/' \
+    --data-urlencode "text_speaker=$voice" \
+    --data-urlencode "req_text=$text" \
+    --data-urlencode 'speaker_map_type=0' \
+    -H 'Connection: keep-alive' \
+    -H 'Content-Length: 0' |
+    jq -r '.data.v_str' |
+    base64 -d > $temp
+if [ -n "$output" ]; then
+    mv $temp $output
+else
+    afplay $temp
+fi
