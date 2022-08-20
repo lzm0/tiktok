@@ -3,7 +3,7 @@
 # currently only supports macOS
 
 usage() {
-    echo "Usage: $0 [-v voice] [-o file] text"
+    echo "Usage: $0 [-v voice] [-o file] [text...]"
     echo "Options:"
     echo "  -v voice  Voice to use (default: en_us_001)"
     echo "            see https://github.com/oscie57/tiktok-voice/blob/main/codes.md for available voices"
@@ -25,12 +25,13 @@ while getopts "v:o:" opt; do
         ;;
     esac
 done
+
 shift $((OPTIND - 1))
 text=$@
 if [ -z "$text" ]; then
-    usage
-    exit 1
+    text=$(cat)
 fi
+
 temp=$(mktemp)
 response=$(curl -X POST -G -s 'https://api16-normal-useast5.us.tiktokv.com/media/api/text/speech/invoke/' \
     --data-urlencode "text_speaker=$voice" \
@@ -44,6 +45,7 @@ if [ "$message" != 'success' ]; then
     exit 1
 fi
 echo $response | jq -r '.data.v_str' | base64 -d > $temp
+
 if [ -n "$output" ]; then
     mv $temp $output
 else

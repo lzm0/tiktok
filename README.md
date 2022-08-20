@@ -21,7 +21,7 @@ mv tiktok /usr/local/bin/tiktok
 ## Usage
 
 ```
-Usage: tiktok [-v voice] [-o file] text
+Usage: tiktok [-v voice] [-o file] [text...]
 Options:
   -v voice  Voice to use (default: en_us_001)
             see https://github.com/oscie57/tiktok-voice/blob/main/codes.md for available voices
