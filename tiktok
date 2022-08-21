@@ -11,13 +11,17 @@ usage() {
 }
 
 voice='en_us_001'
-while getopts "v:o:" opt; do
+while getopts "hv:o:" opt; do
     case $opt in
     v)
         voice=$OPTARG
         ;;
     o)
         output=$OPTARG
+        ;;
+    h)
+        usage
+        exit 0
         ;;
     *)
         usage
