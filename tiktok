@@ -50,4 +50,5 @@ if [ -n "$output" ]; then
     mv $temp $output
 else
     afplay $temp
+    rm $temp
 fi
