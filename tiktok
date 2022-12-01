@@ -3,21 +3,26 @@
 # currently only supports macOS
 
 usage() {
-    echo "Usage: $0 [-v voice] [-o file] [text...]"
+    echo "Usage: $0 -s session_id [-v voice] [-o file] [text...]"
     echo "Options:"
-    echo "  -v voice  Voice to use (default: en_us_001)"
-    echo "            see https://github.com/oscie57/tiktok-voice/blob/main/codes.md for available voices"
-    echo "  -o file   Output file, default is to play audio to the speakers"
+    echo "  -s session_id  Session ID to use"
+    echo "  -v voice       Voice to use (default: en_us_001)"
+    echo "                 see https://github.com/oscie57/tiktok-voice/blob/main/codes.md for available voices"
+    echo "  -o file        Output file, default is to play audio to the speakers"
 }
 
 voice='en_us_001'
-while getopts "hv:o:" opt; do
+session=''
+while getopts "hs:v:o:" opt; do
     case $opt in
     v)
         voice=$OPTARG
         ;;
     o)
         output=$OPTARG
+        ;;
+    s)
+        session=$OPTARG
         ;;
     h)
         usage
@@ -37,12 +42,13 @@ if [ -z "$text" ]; then
 fi
 
 temp=$(mktemp)
-response=$(curl -X POST -G -s 'https://api16-normal-useast5.us.tiktokv.com/media/api/text/speech/invoke/' \
+response=$(curl -X POST -G -s 'https://api.tiktokv.com/media/api/text/speech/invoke/' \
     --data-urlencode "text_speaker=$voice" \
     --data-urlencode "req_text=$text" \
     --data-urlencode 'speaker_map_type=0' \
-    -H 'Connection: keep-alive' \
-    -H 'Content-Length: 0')
+    --data-urlencode 'aid=1233' \
+    --header "Cookie: sessionid=$session"
+)
 message=$(echo $response | jq -r '.message')
 if [ "$message" != 'success' ]; then
     echo "Error: $message"
